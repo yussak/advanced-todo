@@ -1,5 +1,5 @@
 services:
-  backend:
+  api:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -7,13 +7,13 @@ services:
       - "8080:8080"
     tty: true
     volumes:
-      - ./backend:/app
+      - ./:/app
 
-  frontend:
+  web:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
+      - ./:/app
