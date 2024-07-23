@@ -14,7 +14,7 @@ export default function Home() {
         const response = await axios.get("http://localhost:8080/hello");
         setMessage(response.data);
       } catch (error) {
-        throw new Error("Error: ", error);
+        throw new Error(`Error fetching message: ${error}`);
       }
     };
 
