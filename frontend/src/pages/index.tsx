@@ -1,22 +1,24 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8080/hello")
-      .then((response) => response.text())
-      .then((data) => {
-        setMessage(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching message:", error);
-      });
+    const fetchText = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/hello");
+        setMessage(response.data);
+      } catch (error) {
+        throw new Error("Error: ", error);
+      }
+    };
+
+    fetchText();
   }, []);
 
   return (
