@@ -7,6 +7,8 @@ RUN apt-get update && \
         git \
         build-essential
 
+# goファイルでimportして使用するものはimportに追加してgo mod tidyでいいが、それ以外のものはDockerfileでインストールする
+RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 RUN go install github.com/air-verse/air@latest
 
 COPY go.mod go.sum ./
