@@ -17,3 +17,5 @@ services:
       - "3000:3000"
     volumes:
       - ./web/:/app
+    ports:
+      - "5432:5432"
