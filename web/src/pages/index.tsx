@@ -6,15 +6,16 @@ import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
-  const [message, setMessage] = useState("");
+  const [todos, setTodos] = useState([]);
 
   useEffect(() => {
     const fetchText = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/hello");
-        setMessage(response.data);
+        const response = await axios.get("http://localhost:8080/todos");
+        console.log("res", response.data);
+        setTodos(response.data);
       } catch (error) {
-        throw new Error(`Error fetching message: ${error}`);
+        throw new Error(`An error occurred: ${error}`);
       }
     };
 
@@ -29,7 +30,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main} ${inter.className}`}>{message}</main>
+      <main className={`${styles.main} ${inter.className}`}>
+        {todos.map((todo) => (
+          <p key={todo.id}>
+            {todo.id}: {todo.title}, {todo.body}
+          </p>
+        ))}
+      </main>
     </>
   );
 }
