@@ -6,8 +6,13 @@ services:
     ports:
       - "8080:8080"
     tty: true
+    env_file:
+      - .env
     volumes:
       - ./api/:/app
+    depends_on:
+      db:
+        condition: service_healthy
 
   web:
     build:
@@ -17,5 +22,23 @@ services:
       - "3000:3000"
     volumes:
       - ./web/:/app
+
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: example
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: example
     ports:
       - "5432:5432"
+    volumes:
+      - db-store:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U example"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db-store:
