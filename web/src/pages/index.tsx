@@ -11,9 +11,8 @@ export default function Home() {
   useEffect(() => {
     const fetchText = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/todos");
-        console.log("res", response.data);
-        setTodos(response.data);
+        const res = await axios.get("http://localhost:8080/todos");
+        setTodos(res.data);
       } catch (error) {
         throw new Error(`An error occurred: ${error}`);
       }
