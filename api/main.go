@@ -2,12 +2,14 @@ package main
 
 import (
 	controller "backend/controllers"
+	middleware "backend/middlewares"
 	router "backend/routers"
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
@@ -33,6 +35,7 @@ func main() {
 	controller.SetDB(db)
 
 	r := gin.Default()
+	r.Use(cors.New(middleware.CorsConfig()))
 	router.SetupRouter(r)
 
 	r.Run(":8080")

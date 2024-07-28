@@ -2,10 +2,12 @@ package controller
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/oklog/ulid"
+	"golang.org/x/exp/rand"
 )
 
 type Todo struct {
@@ -22,8 +24,6 @@ func SetDB(database *sql.DB) {
 }
 
 func FetchTodos(c *gin.Context) {
-	fmt.Println("fetchtodos called")
-
 	rows, err := db.Query("SELECT * FROM todos")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -43,4 +43,27 @@ func FetchTodos(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, todos)
+}
+
+func AddTodo(c *gin.Context) {
+	t := time.Now()
+	entropy := ulid.Monotonic(rand.New(rand.NewSource(uint64(t.UnixNano()))), 0)
+	id := ulid.MustNew(ulid.Timestamp(t), entropy)
+
+	var req Todo
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	req.ID = id.String()
+	sql := `INSERT INTO todos (id, title, body) VALUES($1, $2, $3)`
+	_, err := db.Exec(sql, req.ID, req.Title, req.Body)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, req)
 }
