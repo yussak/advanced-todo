@@ -51,7 +51,7 @@ export default function Home() {
         </form>
         {todos.map((todo) => (
           <p key={todo.id}>
-            {todo.id}: {todo.title}, {todo.body}
+            {todo.title}, {todo.body}
           </p>
         ))}
       </main>
