@@ -9,17 +9,17 @@ export default function Home() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    const fetchText = async () => {
-      try {
-        const res = await axios.get("http://localhost:8080/todos");
-        setTodos(res.data);
-      } catch (error) {
-        throw new Error(`An error occurred: ${error}`);
-      }
-    };
-
     fetchText();
   }, []);
+
+  const fetchText = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/todos");
+      setTodos(res.data);
+    } catch (error) {
+      throw new Error(`An error occurred: ${error}`);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +33,7 @@ export default function Home() {
     } catch (error) {
       throw new Error("error", error);
     }
+    fetchText();
   };
 
   return (
