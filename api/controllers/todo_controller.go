@@ -2,7 +2,6 @@ package controller
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -25,8 +24,6 @@ func SetDB(database *sql.DB) {
 }
 
 func FetchTodos(c *gin.Context) {
-	fmt.Println("fetchtodos called")
-
 	rows, err := db.Query("SELECT * FROM todos")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

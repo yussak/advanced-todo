@@ -24,7 +24,6 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { title, body } = e.target.elements;
-    console.log("t", title.value, body.value);
     try {
       await axios.post("http://localhost:8080/todo", {
         title: title.value,
