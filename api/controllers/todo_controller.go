@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"database/sql"
+	"backend/internal/db"
 	"net/http"
 	"time"
 
@@ -16,15 +16,8 @@ type Todo struct {
 	Body  string `json:"body"`
 }
 
-var db *sql.DB
-
-// TODO:init db処理を切り出して読み込むように変える
-func SetDB(database *sql.DB) {
-	db = database
-}
-
 func FetchTodos(c *gin.Context) {
-	rows, err := db.Query("SELECT * FROM todos")
+	rows, err := db.DB.Query("SELECT * FROM todos")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -58,7 +51,7 @@ func AddTodo(c *gin.Context) {
 
 	req.ID = id.String()
 	sql := `INSERT INTO todos (id, title, body) VALUES($1, $2, $3)`
-	_, err := db.Exec(sql, req.ID, req.Title, req.Body)
+	_, err := db.DB.Exec(sql, req.ID, req.Title, req.Body)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -76,7 +69,7 @@ func DeleteTodo(c *gin.Context) {
 		return
 	}
 
-	_, err := db.Exec("DELETE FROM todos WHERE id = $1", id)
+	_, err := db.DB.Exec("DELETE FROM todos WHERE id = $1", id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
