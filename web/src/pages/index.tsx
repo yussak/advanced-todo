@@ -35,6 +35,15 @@ export default function Home() {
     fetchText();
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:8080/todo/${id}`);
+    } catch (error) {
+      throw new Error("error", error);
+    }
+    await fetchText();
+  };
+
   return (
     <>
       <Head>
@@ -52,6 +61,7 @@ export default function Home() {
         {todos.map((todo) => (
           <p key={todo.id}>
             {todo.title}, {todo.body}
+            <button onClick={() => handleDelete(todo.id)}>delete</button>
           </p>
         ))}
       </main>
