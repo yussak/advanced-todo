@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [todos, setTodos] = useState([]);
 
+  // TODO:ここもawaitにすべきかもしれないが単純につけるだけだとだめそうので調べる
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -31,7 +32,7 @@ export default function Home() {
     } catch (error) {
       throw new Error("error", error);
     }
-    fetchTodos();
+    await fetchTodos();
   };
 
   const handleDelete = async (id: string) => {
