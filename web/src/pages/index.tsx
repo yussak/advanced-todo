@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -9,10 +8,10 @@ export default function Home() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    fetchText();
+    fetchTodos();
   }, []);
 
-  const fetchText = async () => {
+  const fetchTodos = async () => {
     try {
       const res = await axios.get("http://localhost:8080/todos");
       setTodos(res.data);
@@ -32,7 +31,7 @@ export default function Home() {
     } catch (error) {
       throw new Error("error", error);
     }
-    fetchText();
+    fetchTodos();
   };
 
   const handleDelete = async (id: string) => {
@@ -41,7 +40,7 @@ export default function Home() {
     } catch (error) {
       throw new Error("error", error);
     }
-    await fetchText();
+    await fetchTodos();
   };
 
   return (
