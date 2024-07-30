@@ -1,4 +1,4 @@
-FROM golang:1.22
+FROM golang:1.22 AS builder
 
 WORKDIR /app
 
@@ -16,5 +16,11 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+
+FROM golang:1.22-alpine AS runner
+
+WORKDIR /app
+
+COPY --from=builder /app .
 
 CMD ["air", "-c", ".air.toml"]
