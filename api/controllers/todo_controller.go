@@ -107,34 +107,19 @@ func ShowTodo(c *gin.Context) {
 func UpdateTodo(c *gin.Context) {
 	id := c.Param("id")
 
-	var params map[string]string
-	if err := c.BindJSON(&params); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON format"})
-		return
-	}
-
-	missingFields := []string{}
-	for _, field := range []string{"title", "body"} {
-		if _, ok := params[field]; !ok {
-			missingFields = append(missingFields, field)
-		}
-	}
-
-	if len(missingFields) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields", "fields": missingFields})
+	var todo Todo
+	if err := c.ShouldBindJSON(&todo); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON format or missing required fields"})
 		return
 	}
 
 	sql := `UPDATE todos SET title = $1, body = $2 WHERE id = $3`
-	_, execErr := db.DB.Exec(sql, params["title"], params["body"], id)
-
-	if execErr != nil {
+	if _, execErr := db.DB.Exec(sql, todo.Title, todo.Body, id); execErr != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": execErr.Error()})
 		return
 	}
 
 	row := db.DB.QueryRow("SELECT id, title, body FROM todos WHERE id = $1", id)
-	var todo Todo
 	if err := row.Scan(&todo.ID, &todo.Title, &todo.Body); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
