@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -28,6 +29,8 @@ const TodoDetail = () => {
         <>
           <p>title: {todo.title}</p>
           <p>body: {todo.body}</p>
+
+          <Link href={`/todos/edit/${todo.id}`}>edit</Link>
         </>
       ) : (
         // TODO:一瞬not foundがちらつくので要修正
