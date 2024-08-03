@@ -19,7 +19,7 @@ const TodoDetail = () => {
       const res = await axios.get(`http://localhost:8080/todos/${id}`);
       setTodo(res.data);
     } catch (error) {
-      throw new Error("error", error);
+      console.error(error);
     }
   };
 

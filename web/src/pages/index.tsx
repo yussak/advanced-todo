@@ -18,7 +18,7 @@ export default function Home() {
       const res = await axios.get("http://localhost:8080/todos");
       setTodos(res.data);
     } catch (error) {
-      throw new Error(`An error occurred: ${error}`);
+      console.error(error);
     }
   };
 
@@ -31,7 +31,7 @@ export default function Home() {
         body: body.value,
       });
     } catch (error) {
-      throw new Error("error", error);
+      console.error(error);
     }
     await fetchTodos();
   };
@@ -40,7 +40,7 @@ export default function Home() {
     try {
       await axios.delete(`http://localhost:8080/todo/${id}`);
     } catch (error) {
-      throw new Error("error", error);
+      console.error(error);
     }
     await fetchTodos();
   };
