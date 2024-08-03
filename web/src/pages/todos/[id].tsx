@@ -33,7 +33,7 @@ const TodoDetail = () => {
           <Link href={`/todos/edit/${todo.id}`}>edit</Link>
         </>
       ) : (
-        // TODO:一瞬not foundがちらつくので要修正
+        // TODO:一瞬not foundがちらつくので要修正→共通のローディング画面を作るので対応したい
         <p>todo not found</p>
       )}
     </>
