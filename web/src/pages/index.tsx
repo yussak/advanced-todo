@@ -2,6 +2,7 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
@@ -62,6 +63,7 @@ export default function Home() {
           <p key={todo.id}>
             {todo.title}, {todo.body}
             <button onClick={() => handleDelete(todo.id)}>delete</button>
+            <Link href={`/todos/${todo.id}`}>detail</Link>
           </p>
         ))}
       </main>
