@@ -12,17 +12,14 @@ const EditTodo = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      getGoal();
+      fetchTodoData();
     }
   }, [router.isReady]);
 
-  const getGoal = async () => {
+  const fetchTodoData = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/todos/${id}`);
-      setTodoData({
-        title: res.data.title,
-        body: res.data.body,
-      });
+      const { data } = await axios.get(`http://localhost:8080/todos/${id}`);
+      setTodoData({ title: data.title, body: data.body });
     } catch (error) {
       console.error(error);
     }
@@ -30,15 +27,11 @@ const EditTodo = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTodoData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setTodoData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await axios.put(`http://localhost:8080/todos/edit/${id}`, todoData);
       router.push(`/todos/${id}`);
