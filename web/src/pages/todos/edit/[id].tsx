@@ -1,14 +1,22 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const EditTodo = () => {
   const router = useRouter();
   const id = router.query.id;
-  const [todoData, setTodoData] = useState({
-    title: "",
-    body: "",
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<Inputs>({
+    mode: "onChange",
   });
+  const onSubmit: SubmitHandler<Inputs> = async (data) =>
+    await updateTodo(data);
 
   useEffect(() => {
     if (router.isReady) {
@@ -19,46 +27,44 @@ const EditTodo = () => {
   const fetchTodoData = async () => {
     try {
       const { data } = await axios.get(`http://localhost:8080/todos/${id}`);
-      setTodoData({ title: data.title, body: data.body });
+      setValue("title", data.title);
+      setValue("body", data.body);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTodoData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const updateTodo = async (data: Inputs) => {
     try {
-      await axios.put(`http://localhost:8080/todos/edit/${id}`, todoData);
+      await axios.put(`http://localhost:8080/todos/edit/${id}`, data);
       router.push(`/todos/${id}`);
     } catch (error) {
       console.error(error);
     }
   };
 
+  type Inputs = {
+    title: string;
+    body: string;
+  };
+
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="title">title</label>
         <input
-          type="text"
-          name="title"
-          value={todoData.title}
-          onChange={handleChange}
+          {...register("title", {
+            required: "this field is required.",
+          })}
         />
-
+        {errors.title && <span>{errors.title.message}</span>}
         <label htmlFor="body">body</label>
         <input
-          type="text"
-          name="body"
-          value={todoData.body}
-          onChange={handleChange}
+          {...register("body", {
+            required: "this field is required.",
+          })}
         />
-
+        {errors.body && <span>{errors.body.message}</span>}
         <button type="submit">update</button>
       </form>
     </>
