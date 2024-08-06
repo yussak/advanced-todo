@@ -17,6 +17,8 @@ type Todo struct {
 	Body  string `json:"body"`
 }
 
+// TODO: fat controller担ってると思うので改善
+
 func FetchTodos(c *gin.Context) {
 	rows, err := db.DB.Query("SELECT * FROM todos")
 	if err != nil {
