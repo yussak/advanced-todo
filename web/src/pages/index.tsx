@@ -34,6 +34,7 @@ export default function Home() {
       console.error(error);
     }
     await fetchTodos();
+    reset();
   };
 
   type Inputs = {
@@ -54,6 +55,7 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => await addTodo(data);
 
