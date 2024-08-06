@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
@@ -22,18 +23,22 @@ export default function Home() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { title, body } = e.target.elements;
+  const addTodo = async (data) => {
+    const { title, body } = data;
     try {
       await axios.post("http://localhost:8080/todo", {
-        title: title.value,
-        body: body.value,
+        title,
+        body,
       });
     } catch (error) {
       console.error(error);
     }
     await fetchTodos();
+  };
+
+  type Inputs = {
+    title: string;
+    body: string;
   };
 
   const handleDelete = async (id: string) => {
@@ -45,6 +50,13 @@ export default function Home() {
     await fetchTodos();
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = async (data) => await addTodo(data);
+
   return (
     <>
       <Head>
@@ -54,9 +66,18 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${inter.className}`}>
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="title" />
-          <input type="text" name="body" />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* TODO:送信後reset */}
+          <input
+            {...register("title", {
+              required: "this field is required.",
+            })}
+          />
+          {errors.title && <span>{errors.title.message}</span>}
+          <input
+            {...register("body", { required: "this field is required." })}
+          />
+          {errors.body && <span>{errors.body.message}</span>}
           <input type="submit" value="add" />
         </form>
         {todos.map((todo) => (
