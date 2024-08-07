@@ -70,17 +70,16 @@ export default function Home() {
       <main className="bg-gray-200">
         <h1 className="text-3xl font-bold underline">TodoList</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* TODO:送信後reset */}
           <label htmlFor="title" className="text-red-600">
             Title
           </label>
           <input
-            className="border-red-500"
             {...register("title", {
               required: "this field is required.",
             })}
           />
           {errors.title && <span>{errors.title.message}</span>}
+          <label htmlFor="body">Body</label>
           <input
             {...register("body", { required: "this field is required." })}
           />
