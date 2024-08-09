@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/lib/api-client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ const TodoDetail = () => {
 
   const getGoalDetails = async (id: string) => {
     try {
-      const res = await axios.get(`http://localhost:8080/todos/${id}`);
+      const res = await api.get(`/todos/${id}`);
       setTodo(res.data);
     } catch (error) {
       console.error(error);

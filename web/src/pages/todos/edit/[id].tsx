@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/lib/api-client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -26,7 +26,7 @@ const EditTodo = () => {
 
   const fetchTodoData = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/todos/${id}`);
+      const { data } = await api.get(`/todos/${id}`);
       setValue("title", data.title);
       setValue("body", data.body);
     } catch (error) {
@@ -36,7 +36,7 @@ const EditTodo = () => {
 
   const updateTodo = async (data: Inputs) => {
     try {
-      await axios.put(`http://localhost:8080/todos/edit/${id}`, data);
+      await api.put(`/todos/edit/${id}`, data);
       router.push(`/todos/${id}`);
     } catch (error) {
       console.error(error);

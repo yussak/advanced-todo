@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { api } from "@/lib/api-client";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/todos");
+      const res = await api.get("/todos");
       setTodos(res.data);
     } catch (error) {
       console.error(error);
@@ -28,7 +28,7 @@ export default function Home() {
   const addTodo = async (data) => {
     const { title, body } = data;
     try {
-      await axios.post("http://localhost:8080/todo", {
+      await api.post("/todo", {
         title,
         body,
       });
@@ -46,7 +46,7 @@ export default function Home() {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:8080/todo/${id}`);
+      await api.delete(`/todo/${id}`);
       setFlashMessage("Todo deleted");
       setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
