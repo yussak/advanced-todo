@@ -8,7 +8,6 @@ import { api } from "@/lib/api-client";
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [todos, setTodos] = useState([]);
-  // 削除時のフラッシュ
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
 
   // TODO:ここもawaitにすべきかもしれないが単純につけるだけだとだめそうので調べる
@@ -32,6 +31,8 @@ export default function Home() {
         title,
         body,
       });
+      setFlashMessage("Todo added");
+      setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
       console.error(error);
     }
