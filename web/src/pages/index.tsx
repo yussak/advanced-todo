@@ -8,6 +8,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [todos, setTodos] = useState([]);
+  // 削除時のフラッシュ
+  const [flashMessage, setFlashMessage] = useState<string | null>(null);
 
   // TODO:ここもawaitにすべきかもしれないが単純につけるだけだとだめそうので調べる
   useEffect(() => {
@@ -45,6 +47,8 @@ export default function Home() {
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`http://localhost:8080/todo/${id}`);
+      setFlashMessage("Todo deleted");
+      setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
       console.error(error);
     }
@@ -68,6 +72,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg-gray-200">
+        {/* TODO:出る時ずれるので修正 */}
+        {flashMessage && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+            role="alert"
+          >
+            <strong className="font-bold">{flashMessage}</strong>
+          </div>
+        )}
+
         <h1 className="text-3xl font-bold underline">TodoList</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="title" className="text-red-600">
