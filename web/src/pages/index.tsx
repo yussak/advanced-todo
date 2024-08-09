@@ -25,7 +25,7 @@ export default function Home() {
     }
   };
 
-  const addTodo = async (data) => {
+  const addTodo = async (data: Inputs) => {
     const { title, body } = data;
     try {
       await api.post("/todo", {
