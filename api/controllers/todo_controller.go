@@ -41,6 +41,7 @@ func FetchTodos(c *gin.Context) {
 	c.JSON(http.StatusOK, todos)
 }
 
+// TODO:title, bodyが空のときに追加できないようにする
 func AddTodo(c *gin.Context) {
 	t := time.Now()
 	entropy := ulid.Monotonic(rand.New(rand.NewSource(uint64(t.UnixNano()))), 0)
