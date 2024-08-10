@@ -16,6 +16,8 @@ import (
 
 // TODO:代入、判定を位置行で書き換えられる部分を書き換える（そこでしか使ってない変数は行けるはず）
 
+// if文のみで使用される変数は条件分岐の行で宣言している
+
 func HandleFetchTodos(c *gin.Context) {
 	todos, err := service.FetchTodos()
 	if err != nil {
