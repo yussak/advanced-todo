@@ -30,6 +30,11 @@ func PrepareTodo(req model.Todo) (model.Todo, error) {
 
 	req.ID = id.String()
 
+	err := repository.InsertTodoToDB(req)
+	if err != nil {
+		return model.Todo{}, err
+	}
+
 	return req, nil
 }
 

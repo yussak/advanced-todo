@@ -3,7 +3,6 @@ package controller
 import (
 	"backend/internal/db"
 	model "backend/models"
-	repository "backend/repositories"
 	service "backend/services"
 	"database/sql"
 	"net/http"
@@ -34,7 +33,6 @@ func HandleFetchTodos(c *gin.Context) {
 	c.JSON(http.StatusOK, todos)
 }
 
-// TODO:リポジトリ層はサービス層に移す
 func HandleAddTodo(c *gin.Context) {
 	var req model.Todo
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -44,15 +42,8 @@ func HandleAddTodo(c *gin.Context) {
 
 	todo, err := service.PrepareTodo(req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = repository.InsertTodoToDB(todo)
-	if err != nil {
 		// TODO:err.Error()としたら内部的なものが画面に表示されてしまうので治す（他の部分も同じ）→An error occurredのようにする
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		// c.JSON(http.StatusBadRequest, gin.H{"error": "Title and Body needed"})
 		return
 	}
 
