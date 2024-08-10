@@ -2,6 +2,8 @@ package controller
 
 import (
 	"backend/internal/db"
+	model "backend/models"
+	repository "backend/repositories"
 	service "backend/services"
 	"database/sql"
 	"net/http"
@@ -37,7 +39,7 @@ func AddTodo(c *gin.Context) {
 	entropy := ulid.Monotonic(rand.New(rand.NewSource(uint64(t.UnixNano()))), 0)
 	id := ulid.MustNew(ulid.Timestamp(t), entropy)
 
-	var req Todo
+	var req model.Todo
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -49,11 +51,11 @@ func AddTodo(c *gin.Context) {
 	}
 
 	req.ID = id.String()
-	sql := `INSERT INTO todos (id, title, body) VALUES($1, $2, $3)`
-	_, err := db.DB.Exec(sql, req.ID, req.Title, req.Body)
-
+	err := repository.InsertTodoToDB(req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		// TODO:err.Error()としたら内部的なものが画面に表示されてしまうので治すかもしれない（他の部分も同じ）
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// c.JSON(http.StatusBadRequest, gin.H{"error": "Title and Body needed"})
 		return
 	}
 
