@@ -18,6 +18,8 @@ import (
 
 // if文のみで使用される変数は条件分岐の行で宣言している
 
+// TODO:c.JSONでtodo返さなくていい部分は返さないようにする
+
 func HandleFetchTodos(c *gin.Context) {
 	todos, err := service.FetchTodos()
 	if err != nil {
@@ -95,5 +97,5 @@ func HandleUpdateTodo(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, todo)
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
