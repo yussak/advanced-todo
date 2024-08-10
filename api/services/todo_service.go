@@ -46,3 +46,13 @@ func DeleteTodo(id string) error {
 
 	return nil
 }
+
+func ShowTodo(id string) (model.Todo, error) {
+
+	todo, err := repository.FetchTodoDetailFromDB(id)
+	if err != nil {
+		return model.Todo{}, err
+	}
+
+	return todo, nil
+}

@@ -3,6 +3,8 @@ package repository
 import (
 	"backend/internal/db"
 	model "backend/models"
+	"database/sql"
+	"errors"
 )
 
 // DBとのやり取りを担当
@@ -43,4 +45,20 @@ func DeleteTodoFromDB(id string) error {
 	}
 
 	return nil
+}
+
+func FetchTodoDetailFromDB(id string) (model.Todo, error) {
+	row := db.DB.QueryRow("SELECT id, title, body FROM todos WHERE id = $1", id)
+
+	var todo model.Todo
+	err := row.Scan(&todo.ID, &todo.Title, &todo.Body)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return model.Todo{}, errors.New("todo not found")
+		}
+
+		return model.Todo{}, nil
+	}
+
+	return todo, nil
 }

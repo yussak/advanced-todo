@@ -4,7 +4,6 @@ import (
 	"backend/internal/db"
 	model "backend/models"
 	service "backend/services"
-	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -66,25 +65,16 @@ func HandleDeleteTodo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
-func ShowTodo(c *gin.Context) {
+func HandleShowTodo(c *gin.Context) {
 	id := c.Param("id")
-
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID must be provided"})
 		return
 	}
 
-	row := db.DB.QueryRow("SELECT id, title, body FROM todos WHERE id = $1", id)
-
-	var todo Todo
-	err := row.Scan(&todo.ID, &todo.Title, &todo.Body)
+	todo, err := service.ShowTodo(id)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			c.JSON(http.StatusNotFound, gin.H{"error": "No todo with the provided ID."})
-			return
-		}
-
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
