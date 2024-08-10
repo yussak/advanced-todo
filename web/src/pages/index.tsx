@@ -52,6 +52,8 @@ export default function Home() {
     await fetchTodos();
     reset();
   };
+
+  // TODO:サーバーのエラー受け取れるようにする
   const handleDelete = async (id: string) => {
     try {
       await api.delete(`/todo/${id}`);
