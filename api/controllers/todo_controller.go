@@ -8,13 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TODO:共通化
-type Todo struct {
-	ID    string `json:"id"`
-	Title string `json:"title"`
-	Body  string `json:"body"`
-}
-
 // TODO: fat controllerになっているので改善
 // TODO:まずはcontroller内で適切に関数分離する
 
