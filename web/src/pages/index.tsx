@@ -30,7 +30,7 @@ export default function Home() {
   const addTodo = async (data: Inputs) => {
     const { title, body } = data;
     try {
-      await api.post("/todo", { title, body });
+      await api.post("/todo", { title: "", body });
       setFlashMessage("Todo added");
       setIsError(false);
       setTimeout(() => setFlashMessage(null), 3000);
@@ -96,20 +96,22 @@ export default function Home() {
 
         <h1 className="text-3xl font-bold underline">TodoList</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="title" className="text-red-600">
-            Title
-          </label>
+          <label htmlFor="title">Title</label>
           <input
             {...register("title", {
               required: "this field is required.",
             })}
           />
-          {errors.title && <span>{errors.title.message}</span>}
+          {errors.title && (
+            <span className="text-red-600">{errors.title.message}</span>
+          )}
           <label htmlFor="body">Body</label>
           <input
             {...register("body", { required: "this field is required." })}
           />
-          {errors.body && <span>{errors.body.message}</span>}
+          {errors.body && (
+            <span className="text-red-600">{errors.body.message}</span>
+          )}
           <input type="submit" value="add" />
         </form>
         {todos.map((todo) => (
