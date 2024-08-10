@@ -10,7 +10,7 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-// TODO:代入、判定を位置行で書き換えられる部分を書き換える（そこでしか使ってない変数は行けるはず）
+// TODO:代入、判定を一行で書き換えられる部分を書き換える→そうしたほうが見やすい場所だけやる
 
 func FetchTodos() ([]model.Todo, error) {
 	todos, err := repository.FetchTodosFromDB()

@@ -9,7 +9,7 @@ import (
 
 // DBとのやり取りを担当
 
-// TODO:代入、判定を位置行で書き換えられる部分を書き換える（そこでしか使ってない変数は行けるはず）
+// TODO:代入、判定を一行で書き換えられる部分を書き換える→そうしたほうが見やすい場所だけやる
 
 func FetchTodosFromDB() ([]model.Todo, error) {
 	rows, err := db.DB.Query("SELECT * FROM todos")
