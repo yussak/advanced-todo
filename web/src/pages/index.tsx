@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { api } from "@/lib/api-client";
+import TodoList from "@/components/TodoList";
 
 type Inputs = {
   title: string;
@@ -134,13 +135,7 @@ export default function Home() {
             Submit
           </button>
         </form>
-        {todos.map((todo) => (
-          <p key={todo.id}>
-            {todo.title}, {todo.body}
-            <button onClick={() => handleDelete(todo.id)}>delete</button>
-            <Link href={`/todos/${todo.id}`}>detail</Link>
-          </p>
-        ))}
+        <TodoList todos={todos} onDelete={handleDelete} />
       </main>
     </>
   );
