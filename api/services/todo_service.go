@@ -10,10 +10,6 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-// todo: todo_service.goに変更する
-
-// DBとのやり取りを担当
-
 func FetchTodos() ([]model.Todo, error) {
 	todos, err := repository.FetchTodosFromDB()
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	model "backend/models"
 )
 
-// todo: todo_repository.goに変更する
+// DBとのやり取りを担当
 
 func FetchTodosFromDB() ([]model.Todo, error) {
 	rows, err := db.DB.Query("SELECT * FROM todos")
