@@ -7,11 +7,8 @@ import (
 	service "backend/services"
 	"database/sql"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/oklog/ulid"
-	"golang.org/x/exp/rand"
 )
 
 // TODO:共通化
@@ -24,6 +21,8 @@ type Todo struct {
 // TODO: fat controllerになっているので改善
 // TODO:まずはcontroller内で適切に関数分離する
 
+// コントローラにはリクエストを受け取って処理をしてviewに返すものを書く予定
+
 func HandleFetchTodos(c *gin.Context) {
 	todos, err := service.FetchTodos()
 	if err != nil {
@@ -34,24 +33,20 @@ func HandleFetchTodos(c *gin.Context) {
 	c.JSON(http.StatusOK, todos)
 }
 
-func AddTodo(c *gin.Context) {
-	t := time.Now()
-	entropy := ulid.Monotonic(rand.New(rand.NewSource(uint64(t.UnixNano()))), 0)
-	id := ulid.MustNew(ulid.Timestamp(t), entropy)
-
+func HandleAddTodo(c *gin.Context) {
 	var req model.Todo
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if req.Title == "" || req.Body == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Title and Body needed"})
+	todo, err := service.PrepareTodo(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	req.ID = id.String()
-	err := repository.InsertTodoToDB(req)
+	err = repository.InsertTodoToDB(todo)
 	if err != nil {
 		// TODO:err.Error()としたら内部的なものが画面に表示されてしまうので治すかもしれない（他の部分も同じ）
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -59,7 +54,7 @@ func AddTodo(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, req)
+	c.JSON(http.StatusOK, todo)
 }
 
 func DeleteTodo(c *gin.Context) {
