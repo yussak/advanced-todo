@@ -2,7 +2,7 @@ package controller
 
 import (
 	"backend/internal/db"
-	repository "backend/repositories"
+	service "backend/services"
 	"database/sql"
 	"net/http"
 	"time"
@@ -22,13 +22,8 @@ type Todo struct {
 // TODO: fat controllerになっているので改善
 // TODO:まずはcontroller内で適切に関数分離する
 
-// TODO:サービス層に移す
-//
-//	func HandleFetchTodos() {
-//		FetchTodos
-//	}
-func FetchTodos(c *gin.Context) {
-	todos, err := repository.FetchTodosFromDB()
+func HandleFetchTodos(c *gin.Context) {
+	todos, err := service.FetchTodos()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
