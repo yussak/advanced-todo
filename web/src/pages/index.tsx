@@ -33,12 +33,20 @@ export default function Home() {
       setFlashMessage("Todo added");
       setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
+      // バックエンド側のエラーを受け取ってフラッシュに出す
+      if (error.response && error.response.status === 400) {
+        setFlashMessage(
+          error.response.data.error || "An unexpected error occurred"
+        );
+      } else {
+        setFlashMessage("An unexpected error occurred");
+      }
       console.error(error);
+      setTimeout(() => setFlashMessage(null), 3000);
     }
     await fetchTodos();
     reset();
   };
-
   const handleDelete = async (id: string) => {
     try {
       await api.delete(`/todo/${id}`);
@@ -68,6 +76,7 @@ export default function Home() {
       </Head>
       <main className="bg-gray-200">
         {/* TODO:出る時ずれるので修正 */}
+        {/* TODO:色を動的に変えたい。現状エラーのフラッシュもgreenなのでredにしたい */}
         {flashMessage && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
