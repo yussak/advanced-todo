@@ -30,7 +30,7 @@ export default function Home() {
   const addTodo = async (data: Inputs) => {
     const { title, body } = data;
     try {
-      await api.post("/todo", { title: "", body });
+      await api.post("/todo", { title, body });
       setFlashMessage("Todo added");
       setIsError(false);
       setTimeout(() => setFlashMessage(null), 3000);
