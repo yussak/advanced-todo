@@ -50,8 +50,7 @@ func HandleDeleteTodo(c *gin.Context) {
 		return
 	}
 
-	err := service.DeleteTodo(id)
-	if err != nil {
+	if err := service.DeleteTodo(id); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
