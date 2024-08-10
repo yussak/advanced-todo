@@ -12,6 +12,7 @@ type Inputs = {
 export default function Home() {
   const [todos, setTodos] = useState([]);
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
+  const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
     fetchTodos();
@@ -31,6 +32,7 @@ export default function Home() {
     try {
       await api.post("/todo", { title, body });
       setFlashMessage("Todo added");
+      setIsError(false);
       setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
       // バックエンド側のエラーを受け取ってフラッシュに出す
@@ -38,11 +40,14 @@ export default function Home() {
         setFlashMessage(
           error.response.data.error || "An unexpected error occurred"
         );
+        setTimeout(() => setFlashMessage(null), 5000);
+        setIsError(true);
       } else {
         setFlashMessage("An unexpected error occurred");
+        setTimeout(() => setFlashMessage(null), 5000);
+        setIsError(true);
       }
       console.error(error);
-      setTimeout(() => setFlashMessage(null), 3000);
     }
     await fetchTodos();
     reset();
@@ -76,10 +81,13 @@ export default function Home() {
       </Head>
       <main className="bg-gray-200">
         {/* TODO:出る時ずれるので修正 */}
-        {/* TODO:色を動的に変えたい。現状エラーのフラッシュもgreenなのでredにしたい */}
         {flashMessage && (
           <div
-            className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+            className={`${
+              isError
+                ? "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                : "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+            }`}
             role="alert"
           >
             <strong className="font-bold">{flashMessage}</strong>
