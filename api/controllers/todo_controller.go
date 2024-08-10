@@ -53,7 +53,7 @@ func AddTodo(c *gin.Context) {
 	}
 
 	if req.Title == "" || req.Body == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Title needed"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Title and Body needed"})
 		return
 	}
 
