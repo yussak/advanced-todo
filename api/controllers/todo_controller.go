@@ -2,6 +2,7 @@ package controller
 
 import (
 	"backend/internal/db"
+	service "backend/services"
 	"database/sql"
 	"net/http"
 	"time"
@@ -11,6 +12,7 @@ import (
 	"golang.org/x/exp/rand"
 )
 
+// TODO:共通化
 type Todo struct {
 	ID    string `json:"id"`
 	Title string `json:"title"`
@@ -22,33 +24,13 @@ type Todo struct {
 
 // TODO:サービス層に移す
 func FetchTodos(c *gin.Context) {
-	todos, err := fetchTodosFromDB()
+	todos, err := service.FetchTodosFromDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, todos)
-}
-
-// TODO:リポジトリ層にうつす
-func fetchTodosFromDB() ([]Todo, error) {
-	rows, err := db.DB.Query("SELECT * FROM todos")
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-	todos := []Todo{}
-	for rows.Next() {
-		var todo Todo
-		err = rows.Scan(&todo.ID, &todo.Title, &todo.Body)
-		if err != nil {
-			return nil, err
-		}
-		todos = append(todos, todo)
-	}
-	return todos, nil
 }
 
 func AddTodo(c *gin.Context) {
