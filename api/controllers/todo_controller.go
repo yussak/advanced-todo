@@ -48,7 +48,7 @@ func HandleAddTodo(c *gin.Context) {
 
 	err = repository.InsertTodoToDB(todo)
 	if err != nil {
-		// TODO:err.Error()としたら内部的なものが画面に表示されてしまうので治すかもしれない（他の部分も同じ）
+		// TODO:err.Error()としたら内部的なものが画面に表示されてしまうので治す（他の部分も同じ）→An error occurredのようにする
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		// c.JSON(http.StatusBadRequest, gin.H{"error": "Title and Body needed"})
 		return
