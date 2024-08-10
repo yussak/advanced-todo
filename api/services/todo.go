@@ -10,8 +10,7 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-// todo:これrepo.todoでいいのか確認（model.Todoじゃなくていいのか）
-func FetchTodos() ([]repository.Todo, error) {
+func FetchTodos() ([]model.Todo, error) {
 	todos, err := repository.FetchTodosFromDB()
 	if err != nil {
 		return nil, err
