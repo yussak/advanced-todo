@@ -10,6 +10,10 @@ import (
 	"golang.org/x/exp/rand"
 )
 
+// todo: todo_service.goに変更する
+
+// DBとのやり取りを担当
+
 func FetchTodos() ([]model.Todo, error) {
 	todos, err := repository.FetchTodosFromDB()
 	if err != nil {
@@ -31,4 +35,13 @@ func PrepareTodo(req model.Todo) (model.Todo, error) {
 	req.ID = id.String()
 
 	return req, nil
+}
+
+func DeleteTodo(id string) error {
+	err := repository.DeleteTodoFromDB(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

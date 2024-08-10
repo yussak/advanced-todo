@@ -22,6 +22,7 @@ type Todo struct {
 // TODO:まずはcontroller内で適切に関数分離する
 
 // コントローラにはリクエストを受け取って処理をしてviewに返すものを書く予定
+// TODO:コントローラ層はリポジトリ層とやり取りをしないのに揃える
 
 func HandleFetchTodos(c *gin.Context) {
 	todos, err := service.FetchTodos()
@@ -33,6 +34,7 @@ func HandleFetchTodos(c *gin.Context) {
 	c.JSON(http.StatusOK, todos)
 }
 
+// TODO:リポジトリ層はサービス層に移す
 func HandleAddTodo(c *gin.Context) {
 	var req model.Todo
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -57,17 +59,16 @@ func HandleAddTodo(c *gin.Context) {
 	c.JSON(http.StatusOK, todo)
 }
 
-func DeleteTodo(c *gin.Context) {
+func HandleDeleteTodo(c *gin.Context) {
 	id := c.Param("id")
-
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID must be provided"})
 		return
 	}
 
-	_, err := db.DB.Exec("DELETE FROM todos WHERE id = $1", id)
+	err := service.DeleteTodo(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
