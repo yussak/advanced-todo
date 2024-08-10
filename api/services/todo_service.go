@@ -26,11 +26,7 @@ func PrepareTodo(req model.Todo) (model.Todo, error) {
 		return model.Todo{}, errors.New("title and body needed")
 	}
 
-	t := time.Now()
-	entropy := ulid.Monotonic(rand.New(rand.NewSource(uint64(t.UnixNano()))), 0)
-	id := ulid.MustNew(ulid.Timestamp(t), entropy)
-
-	req.ID = id.String()
+	req.ID = generateTodoID()
 
 	err := repository.InsertTodoToDB(req)
 	if err != nil {
@@ -38,6 +34,15 @@ func PrepareTodo(req model.Todo) (model.Todo, error) {
 	}
 
 	return req, nil
+}
+
+func generateTodoID() string {
+	t := time.Now()
+	entropy := ulid.Monotonic(rand.New(rand.NewSource(uint64(t.UnixNano()))), 0)
+	ID := ulid.MustNew(ulid.Timestamp(t), entropy)
+
+	// stringに変換したidを返す
+	return ID.String()
 }
 
 func DeleteTodo(id string) error {
