@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"backend/internal/db"
 	model "backend/models"
 	service "backend/services"
 	"net/http"
@@ -21,6 +20,8 @@ type Todo struct {
 
 // コントローラにはリクエストを受け取って処理をしてviewに返すものを書く予定
 // TODO:コントローラ層はリポジトリ層とやり取りをしないのに揃える
+
+// TODO:代入、判定を位置行で書き換えられる部分を書き換える（そこでしか使ってない変数は行けるはず）
 
 func HandleFetchTodos(c *gin.Context) {
 	todos, err := service.FetchTodos()
@@ -81,23 +82,21 @@ func HandleShowTodo(c *gin.Context) {
 	c.JSON(http.StatusOK, todo)
 }
 
-func UpdateTodo(c *gin.Context) {
+func HandleUpdateTodo(c *gin.Context) {
 	id := c.Param("id")
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID must be provided"})
+		return
+	}
 
-	var todo Todo
+	var todo model.Todo
 	if err := c.ShouldBindJSON(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON format or missing required fields"})
 		return
 	}
 
-	sql := `UPDATE todos SET title = $1, body = $2 WHERE id = $3`
-	if _, execErr := db.DB.Exec(sql, todo.Title, todo.Body, id); execErr != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": execErr.Error()})
-		return
-	}
-
-	row := db.DB.QueryRow("SELECT id, title, body FROM todos WHERE id = $1", id)
-	if err := row.Scan(&todo.ID, &todo.Title, &todo.Body); err != nil {
+	todo, err := service.UpdateTodo(id, todo)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

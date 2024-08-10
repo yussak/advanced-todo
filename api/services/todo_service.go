@@ -10,6 +10,8 @@ import (
 	"golang.org/x/exp/rand"
 )
 
+// TODO:代入、判定を位置行で書き換えられる部分を書き換える（そこでしか使ってない変数は行けるはず）
+
 func FetchTodos() ([]model.Todo, error) {
 	todos, err := repository.FetchTodosFromDB()
 	if err != nil {
@@ -50,6 +52,15 @@ func DeleteTodo(id string) error {
 func ShowTodo(id string) (model.Todo, error) {
 
 	todo, err := repository.FetchTodoDetailFromDB(id)
+	if err != nil {
+		return model.Todo{}, err
+	}
+
+	return todo, nil
+}
+
+func UpdateTodo(id string, todo model.Todo) (model.Todo, error) {
+	err := repository.UpdateTodoInDB(id, todo)
 	if err != nil {
 		return model.Todo{}, err
 	}

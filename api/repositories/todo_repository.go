@@ -9,6 +9,8 @@ import (
 
 // DBとのやり取りを担当
 
+// TODO:代入、判定を位置行で書き換えられる部分を書き換える（そこでしか使ってない変数は行けるはず）
+
 func FetchTodosFromDB() ([]model.Todo, error) {
 	rows, err := db.DB.Query("SELECT * FROM todos")
 	if err != nil {
@@ -61,4 +63,13 @@ func FetchTodoDetailFromDB(id string) (model.Todo, error) {
 	}
 
 	return todo, nil
+}
+
+func UpdateTodoInDB(id string, todo model.Todo) error {
+	sql := `UPDATE todos SET title = $1, body = $2 WHERE id = $3`
+	if _, err := db.DB.Exec(sql, todo.Title, todo.Body, id); err != nil {
+		return err
+	}
+
+	return nil
 }
