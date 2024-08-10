@@ -1,16 +1,18 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { api } from "@/lib/api-client";
 
-const inter = Inter({ subsets: ["latin"] });
+type Inputs = {
+  title: string;
+  body: string;
+};
+
 export default function Home() {
   const [todos, setTodos] = useState([]);
   const [flashMessage, setFlashMessage] = useState<string | null>(null);
 
-  // TODO:ここもawaitにすべきかもしれないが単純につけるだけだとだめそうので調べる
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -27,10 +29,7 @@ export default function Home() {
   const addTodo = async (data: Inputs) => {
     const { title, body } = data;
     try {
-      await api.post("/todo", {
-        title,
-        body,
-      });
+      await api.post("/todo", { title, body });
       setFlashMessage("Todo added");
       setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
@@ -38,11 +37,6 @@ export default function Home() {
     }
     await fetchTodos();
     reset();
-  };
-
-  type Inputs = {
-    title: string;
-    body: string;
   };
 
   const handleDelete = async (id: string) => {
