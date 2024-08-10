@@ -17,13 +17,25 @@ type Todo struct {
 	Body  string `json:"body"`
 }
 
-// TODO: fat controller担ってると思うので改善
+// TODO: fat controllerになっているので改善
+// TODO:まずはcontroller内で適切に関数分離する
 
+// TODO:サービス層に移す
 func FetchTodos(c *gin.Context) {
-	rows, err := db.DB.Query("SELECT * FROM todos")
+	todos, err := fetchTodosFromDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	c.JSON(http.StatusOK, todos)
+}
+
+// TODO:リポジトリ層にうつす
+func fetchTodosFromDB() ([]Todo, error) {
+	rows, err := db.DB.Query("SELECT * FROM todos")
+	if err != nil {
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -32,13 +44,11 @@ func FetchTodos(c *gin.Context) {
 		var todo Todo
 		err = rows.Scan(&todo.ID, &todo.Title, &todo.Body)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
+			return nil, err
 		}
 		todos = append(todos, todo)
 	}
-
-	c.JSON(http.StatusOK, todos)
+	return todos, nil
 }
 
 func AddTodo(c *gin.Context) {
