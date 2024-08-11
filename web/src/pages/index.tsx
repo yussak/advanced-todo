@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api-client";
 import TodoList from "@/components/todos/TodoList";
 import TodoForm from "@/components/ui/form/TodoForm";
+import FlashMessage from "@/components/ui/flash/FlashMessage";
 
 type Inputs = {
   title: string;
@@ -30,7 +31,7 @@ export default function Home() {
   const handleAddTodo = async (data: Inputs, reset: () => void) => {
     const { title, body } = data;
     try {
-      await api.post("/todo", { title: "", body });
+      await api.post("/todo", { title, body });
       setFlashMessage("Todo added");
       setIsError(false);
       setTimeout(() => setFlashMessage(null), 3000);
@@ -76,16 +77,7 @@ export default function Home() {
       <main className="bg-gray-200">
         {/* TODO:出る時ずれるので修正 */}
         {flashMessage && (
-          <div
-            className={`${
-              isError
-                ? "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                : "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-            }`}
-            role="alert"
-          >
-            <strong className="font-bold">{flashMessage}</strong>
-          </div>
+          <FlashMessage isError={isError} flashMessage={flashMessage} />
         )}
 
         <h1 className="text-3xl font-bold underline">TodoList</h1>
