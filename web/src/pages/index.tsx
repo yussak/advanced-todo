@@ -1,8 +1,8 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api-client";
-import TodoList from "@/components/TodoList";
-import TodoForm from "@/components/TodoForm";
+import TodoList from "@/components/todos/TodoList";
+import TodoForm from "@/components/forms/TodoForm";
 
 type Inputs = {
   title: string;
@@ -30,7 +30,7 @@ export default function Home() {
   const handleAddTodo = async (data: Inputs, reset: () => void) => {
     const { title, body } = data;
     try {
-      await api.post("/todo", { title, body });
+      await api.post("/todo", { title: "", body });
       setFlashMessage("Todo added");
       setIsError(false);
       setTimeout(() => setFlashMessage(null), 3000);
