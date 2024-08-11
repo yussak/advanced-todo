@@ -1,6 +1,6 @@
 import { it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import TodoList from "../components/todos/TodoList";
+import TodoList from "../../../todos/TodoList";
 import axios from "axios";
 
 vi.mock("axios");
