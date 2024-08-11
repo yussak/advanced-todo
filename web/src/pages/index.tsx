@@ -27,8 +27,7 @@ export default function Home() {
     }
   };
 
-  // TODO:handleAddTodoに変える
-  const addTodo = async (data: Inputs, reset: () => void) => {
+  const handleAddTodo = async (data: Inputs, reset: () => void) => {
     const { title, body } = data;
     try {
       await api.post("/todo", { title, body });
@@ -55,8 +54,7 @@ export default function Home() {
   };
 
   // TODO:サーバーのエラー受け取れるようにする
-  // Todo:handleDeleteTodoに変える
-  const handleDelete = async (id: string) => {
+  const handleDeleteTodo = async (id: string) => {
     try {
       await api.delete(`/todo/${id}`);
       setFlashMessage("Todo deleted");
@@ -91,8 +89,8 @@ export default function Home() {
         )}
 
         <h1 className="text-3xl font-bold underline">TodoList</h1>
-        <TodoForm onSubmit={addTodo} />
-        <TodoList todos={todos} onDelete={handleDelete} />
+        <TodoForm onSubmit={handleAddTodo} />
+        <TodoList todos={todos} onDelete={handleDeleteTodo} />
       </main>
     </>
   );
