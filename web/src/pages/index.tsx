@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api-client";
 import TodoList from "@/components/todos/TodoList";
-import TodoForm from "@/components/forms/TodoForm";
+import TodoForm from "@/components/ui/form/TodoForm";
 
 type Inputs = {
   title: string;
