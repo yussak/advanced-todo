@@ -1,6 +1,6 @@
 import { it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import TodoList from "../../../todos/TodoList";
+import TodoList from "../TodoList";
 import axios from "axios";
 import "@testing-library/jest-dom";
 
