@@ -3,10 +3,17 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+// TODO:共通化
+type Todo = {
+  id: string;
+  title: string;
+  body: string;
+};
+
 const TodoDetail = () => {
   const router = useRouter();
   const id = router.query.id;
-  const [todo, setTodo] = useState(null);
+  const [todo, setTodo] = useState<Todo | null>(null);
 
   useEffect(() => {
     if (id) {
