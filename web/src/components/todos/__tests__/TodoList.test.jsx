@@ -7,7 +7,7 @@ import "@testing-library/jest-dom";
 vi.mock("axios");
 
 describe("TodoForm", () => {
-  it("個数が正しい", async () => {
+  it("should display correct number of todos", async () => {
     // apiとのやり取りは親側でやっているので、TodoListコンポーネントのテストでは直書きでtodosでOK
     const todos = [
       { id: "abc", title: "title1", body: "body1" },
