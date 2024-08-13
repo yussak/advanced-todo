@@ -13,5 +13,3 @@ FROM node:20.15.1-alpine AS runner
 WORKDIR /app
 
 COPY --from=builder /app .
-
-CMD ["yarn", "run", "dev"]
