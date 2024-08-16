@@ -39,7 +39,7 @@ export default function Home() {
       // バックエンド側のエラーを受け取ってフラッシュに出す
       if (error.response && error.response.status === 400) {
         setFlashMessage(
-          error.response.data.error || "An unexpected error occurred"
+          error.response.data.error || "An unexpected error occurred",
         );
         setTimeout(() => setFlashMessage(null), 5000);
         setIsError(true);
