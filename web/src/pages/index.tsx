@@ -64,14 +64,10 @@ export default function Home() {
   const handleDeleteTodo = async (id: string) => {
     try {
       await api.delete(`/todo/${id}`);
-      // await api.delete(`/todo/${id}`);
-      setFlashMessage("Todo deleted");
-      setTimeout(() => setFlashMessage(null), 3000);
+      setFlash("Todo deleted", 3000, false);
     } catch (error) {
       console.error(error);
-      // setFlashMessage("An unexpected error occurred");
-      // setTimeout(() => setFlashMessage(null), 5000);
-      // setIsError(true);
+      setFlash("An unexpected error occurred", 5000, true);
     }
     await fetchTodos();
   };
