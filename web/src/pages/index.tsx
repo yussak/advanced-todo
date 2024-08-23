@@ -28,40 +28,50 @@ export default function Home() {
     }
   };
 
+  const setFlash = async (
+    message: string,
+    second: number,
+    isError: boolean
+  ) => {
+    setFlashMessage(message);
+    setTimeout(() => setFlashMessage(null), second);
+    setIsError(isError);
+  };
+
   const handleAddTodo = async (data: Inputs, reset: () => void) => {
     const { title, body } = data;
     try {
       await api.post("/todo", { title, body });
-      setFlashMessage("Todo added");
-      setIsError(false);
-      setTimeout(() => setFlashMessage(null), 3000);
+      setFlash("Todo added", 3000, false);
+      reset();
+      await fetchTodos();
     } catch (error) {
       // バックエンド側のエラーを受け取ってフラッシュに出す
       if (error.response && error.response.status === 400) {
-        setFlashMessage(
-          error.response.data.error || "An unexpected error occurred"
+        setFlash(
+          error.response.data.error || "An unexpected error occurred",
+          5000,
+          true
         );
-        setTimeout(() => setFlashMessage(null), 5000);
-        setIsError(true);
       } else {
-        setFlashMessage("An unexpected error occurred");
-        setTimeout(() => setFlashMessage(null), 5000);
-        setIsError(true);
+        setFlash("An unexpected error occurred", 5000, true);
       }
       console.error(error);
     }
-    await fetchTodos();
-    reset();
   };
 
   // TODO:サーバーのエラー受け取れるようにする
   const handleDeleteTodo = async (id: string) => {
     try {
       await api.delete(`/todo/${id}`);
+      // await api.delete(`/todo/${id}`);
       setFlashMessage("Todo deleted");
       setTimeout(() => setFlashMessage(null), 3000);
     } catch (error) {
       console.error(error);
+      // setFlashMessage("An unexpected error occurred");
+      // setTimeout(() => setFlashMessage(null), 5000);
+      // setIsError(true);
     }
     await fetchTodos();
   };
